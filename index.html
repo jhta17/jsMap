@@ -1,0 +1,162 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
+<link rel="stylesheet" href="style.css"> 
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+	
+</style>
+</head>
+
+<body>  
+
+
+<div id="map" ></div>
+<div id="legend" ><label style="margin:10px">Legend</label>
+		<div class="color" style="background-color:#ffffd9"><label class="colorlabel">0% </label></div>
+		<div class="color" style="background-color:#edf8af"><label class="colorlabel"><1% </label></div>
+		<div class="color" style="background-color:#c7e9b4"><label class="colorlabel"><2% </label></div>
+		<div class="color" style="background-color:#7ccba2"><label class="colorlabel"><4% </label></div>
+		<div class="color" style="background-color:#7fcdbb"><label class="colorlabel"><8% </label></div>
+		<div class="color" style="background-color:#41b6c4"><label class="colorlabel"><16% </label></div>
+		<div class="color" style="background-color:#1d91c0"><label class="colorlabel"><32% </label></div>
+		<div class="color" style="background-color:#225ea8"><label class="colorlabel"><64% </label></div>
+		<div class="color" style="background-color:#253393"><label class="colorlabel"><100% </label></div>
+		<div class="color" style="background-color:#081d58"><label class="colorlabel">>100% </label></div>
+</div>
+<div class='map-overlay' id='features'>
+	<h2>COVID-19 Growth</h2>
+		
+	<div class="info" id="left"><label>County </label><br><div class="changer" id='cname'> County Name</div></div>
+	<div class="info" id="right"><label>Number of cases </label><br><div class="changer" id='ccase'> Number of Cases</div></div>
+	<div class="info"><label>Rate of Growth</label><br><div class="changer" id='crate'> Rate of Growth</div></div>
+	<div class="info"><label>Trends in Growth Rate</label></br><div class="changer" id='ctrends'>Trends</div></div>
+
+	<label>Week of: <span id='slider-value'>March 15</span></label><br>
+	<input id="slider" type="range" min="0" max="15" step="1" value="0" />
+	
+
+</div>
+
+
+<script>
+	Swal.fire(
+	  'Welcome!',
+	  'This map helps visualize the rates (not number of cases) of COVID-19. It\'s a great tool for monitoring growth and seeing how each county is doing based on time. <br>To use this map, please use the slider to pick a week to visualize rates of growth among the counties. Hover over a county to view details. Double click to zoom in. Scroll to zoom out. Click and drag the mouse to see more of the map.',
+	  'question'
+	)
+	var dates=['2020-03-15', '2020-03-22', '2020-03-29', '2020-04-05', '2020-04-12', '2020-04-19', '2020-04-26', '2020-05-03', '2020-05-10', '2020-05-17', '2020-05-24', '2020-05-31', '2020-06-07', '2020-06-14', '2020-06-21']
+	var months=['January','February','March','April','May','June','July','August','September','October','November','December']
+
+	/**function filterBy(date) {
+		var filters = ['==', 'DATE', date];
+		map.setFilter('rates', filters);
+
+		 
+		// Set the label to the month
+		document.getElementById('date').textContent = dates[date];
+	}**/
+	mapboxgl.accessToken = 'pk.eyJ1Ijoiamh0YSIsImEiOiJja2Jqb2xpajgwNG4yMnNseHlubTR5Mm00In0.GScHKF4zE3MavQAoguJwew';
+	var bounds = [
+		[-79.719674, 37.725253], // Southwest coordinates
+		[-74.95817375, 40.3635264] // Northeast coordinates
+	];
+
+	 
+	var map = new mapboxgl.Map({
+		container: 'map',
+		style: 'mapbox://styles/jhta/ckbvai785108v1io040x1v5l1',
+		center: [-77.28885, 38.9945295],
+		zoom: 1,
+		maxBounds: bounds, // Sets bounds as max
+	});
+	
+	var slider = document.getElementById('slider');
+	var sliderValue = document.getElementById('slider-value');
+	
+	map.on('load', function() {
+
+		slider.addEventListener('input', function(e) {
+
+			var currentWeek=dates[e.target.value]
+			var dt= new Date(currentWeek.replace(/-/g,'/'))
+			map.setFilter('countiespercent-9ozlrg', ['==', ['string', ['get', 'DATE']], currentWeek]);
+			sliderValue.textContent = months[dt.getMonth()]+" "+dt.getDate() ;
+		});
+	});
+
+	map.on('mousemove', function(e) {
+		var features = map.queryRenderedFeatures(e.point);
+		 
+		// Limit the number of properties we're displaying for
+		// legibility and performance
+		var displayProperties = [
+			'name'
+		];
+		//map.setFilter('rates', ['==', ['string', ['get', 'DATE']], "2020-03-29"]);//interesting the setfilter works here...
+		if (features[0].properties.SERIES== undefined){
+			document.getElementById('ctrends').innerHTML = "No trend data to display"
+		}else if (features[0].properties.SERIES == 1){
+			if (features[0].properties.ACCELERATION >0){
+				document.getElementById('ctrends').innerHTML ="Cases began to ramp up"
+			}else if (features[0].properties.ACCELERATION <0){
+				document.getElementById('ctrends').innerHTML ="Cases began to slow down"
+			}else if (features[0].properties.ACCELERATION==0){
+				document.getElementById('ctrends').innerHTML ="Cases begun to even out"
+			}
+		
+		}else if (features[0].properties.ACCELERATION < 0){
+			document.getElementById('ctrends').innerHTML = "Decreasing for "+ features[0].properties.SERIES + " weeks."
+		}else if (features[0].properties.ACCELERATION == 0){
+			document.getElementById('ctrends').innerHTML = "Same rate for "+ features[0].properties.SERIES + " weeks."
+		}else if (features[0].properties.ACCELERATION > 0){
+			document.getElementById('ctrends').innerHTML = "Increasing for "+ features[0].properties.SERIES + " weeks. "
+		}
+		if(features[0].properties.COUNTY != undefined){
+			document.getElementById('cname').innerHTML = features[0].properties.COUNTY
+		}
+		if (JSON.stringify(features[0].properties.CASES) != undefined && isNaN(features[0].properties.PERCENT)==false){
+			document.getElementById('cname').innerHTML = features[0].properties.COUNTY
+			if(features[0].properties.CASES==1){
+				document.getElementById('ccase').innerHTML = ""+JSON.stringify(features[0].properties.CASES) + " case"
+			}else{
+				document.getElementById('ccase').innerHTML = ""+JSON.stringify(features[0].properties.CASES) + " cases"
+			}
+			if (100-(features[0].properties.PERCENT)<0){
+			
+				document.getElementById('crate').innerHTML = Math.abs(100-(features[0].properties.PERCENT)).toFixed(1) + "% increase";
+			}else if(100-(features[0].properties.PERCENT)==0){
+				document.getElementById('crate').innerHTML = "Cases have stayed the same";}
+			
+			else{
+				
+				document.getElementById('crate').innerHTML = Math.abs(100-(features[0].properties.PERCENT)).toFixed(1) + "% decrease";
+			}
+		}
+		else{
+			document.getElementById('ccase').innerHTML = "No data yet!"
+			document.getElementById('crate').innerHTML = "No data yet!";
+		}
+
+	});
+	
+	
+
+
+
+ 
+</script>
+ 
+
+
+</body>
+
+
+
+
+</html>
