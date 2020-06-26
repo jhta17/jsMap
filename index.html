@@ -4,6 +4,7 @@
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
 <link rel="stylesheet" href="style.css"> 
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -30,7 +31,7 @@
 		<div class="color" style="background-color:#081d58"><label class="colorlabel">>100% </label></div>
 </div>
 <div class='map-overlay' id='features'>
-	<h2>COVID-19 Growth</h2>
+	<h2 class="heading">COVID-19 Growth</h2>
 		
 	<div class="info" id="left"><label>County </label><br><div class="changer" id='cname'> County Name</div></div>
 	<div class="info" id="right"><label>Number of cases </label><br><div class="changer" id='ccase'> Number of Cases</div></div>
@@ -46,9 +47,8 @@
 
 <script>
 	Swal.fire(
-	  'Welcome!',
-	  'This map helps visualize the rates (not number of cases) of COVID-19. It\'s a great tool for monitoring growth and seeing how each county is doing based on time. <br>To use this map, please use the slider to pick a week to visualize rates of growth among the counties. Hover over a county to view details. Double click to zoom in. Scroll to zoom out. Click and drag the mouse to see more of the map.',
-	  'question'
+	  {title:"Welcome to Maryland Coronavirus Monitor",
+	  text:"This special map does not visualize case count, but rather the growth rates of the virus in a way that is comparable among the counties. Potential trends for increasing and decreasing rates are also calculated. To use the map, simply drag to move, scroll to zoom. Use the slider to retrieve a particular week and see how the growth rates develop over time. Hover over a county for details. "}
 	)
 	var dates=['2020-03-15', '2020-03-22', '2020-03-29', '2020-04-05', '2020-04-12', '2020-04-19', '2020-04-26', '2020-05-03', '2020-05-10', '2020-05-17', '2020-05-24', '2020-05-31', '2020-06-07', '2020-06-14', '2020-06-21']
 	var months=['January','February','March','April','May','June','July','August','September','October','November','December']
