@@ -1,0 +1,128 @@
+	body { 
+		margin: 0; 
+		padding: 0; 
+		overflow:hidden;
+		font-family: 'Hind Siliguri', sans-serif;
+		font-weight:400;
+	}
+	#map { 
+		float:left;
+		width:100%; 
+		height:100%;
+	}
+	h2{
+		font-family: 'Hind Siliguri', sans-serif;
+		font-weight:700;
+		width:100%;
+	}
+	.map-overlay{
+		display:flex;
+		line-height:15px;
+		flex-direction:column;
+		position:fixed; 
+		float:bottom;
+		background-color:white; 
+		padding: 2vh 2vw 2vh 2vw;
+		margin-left:3vw;
+		bottom:3vh;
+		width:15vw;
+		height:50vh;
+		border-radius:10px;
+		overflow-wrap: break-word;
+		transition-property: height;
+		transition-duration: 4s;
+		transition-delay: 2s;
+		z-index:999;
+	}
+	.map-overlay label{
+		display:block;
+		float:left;
+		font-family: 'Hind Siliguri', sans-serif;
+		font-weight:600;
+		font-size:18px;
+		width:100%;
+
+	}
+	.info {
+
+		overflow:hidden;
+	}
+
+	.changer{
+		margin:10px;
+		margin-left:-0px;
+	}
+	.description{
+		color:#225ea8;
+		padding-left:10px;
+		font-size:14px;
+		font-weight:500;
+		text-align:right;
+	}
+	
+	#ccase{
+		width:100%;
+	}
+	#crate{
+		width:100%;
+	}
+	input[type="range"] {
+	 -webkit-appearance: none;
+	}
+
+	input[type="range"]:focus {
+		outline: none;
+	}
+	input[type="range"]::-webkit-slider-runnable-track {
+	 background: #225ea8;
+	 height: 5px;
+	}
+
+	input[type="range"]::-moz-range-track {
+		width:200px;
+		 background: tomato;
+		 height: 5px;
+	}
+	input[type="range"]::-webkit-slider-thumb {
+	 -webkit-appearance: none;
+	 height: 20px;
+	 width: 20px;
+	 background: #1d91c0;
+	 border:5px solid #225ea8;
+	 margin-top: -7.5px;
+	 border-radius: 50%;
+	}
+
+	input[type="range"]::-moz-range-thumb {
+	 height: 15px;
+	 width: 15px;
+	 background: #41b6c4;
+	 margin-top: -5px;
+	 border-radius: 50%;
+	}
+	
+	.color{
+		border-radius:20px;
+		height:17px;
+		width:17px;
+		margin:8px;
+		border:1px solid #000
+	}
+	.colorlabel{
+		position:fixed;
+		font-weight:500;
+		font-size:14px;
+		margin-left:30px;
+		margin-top:-5px;
+	}
+	#legend{
+		position:absolute;
+		left:18vw;
+		margin-left:50px;
+		padding:10px 50px 0px 10px;
+		background-color:#eee;
+		bottom:4vh;
+		font-weight:600;
+		height:50vh;
+		border-radius:5px;
+	}
